@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Marca;
 
 class MarcaController extends Controller
 {
@@ -11,7 +12,7 @@ class MarcaController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json(Marca::all());
     }
 
     /**
@@ -19,7 +20,16 @@ class MarcaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request-> validate([
+            'nombres'=>'required',
+            
+         ]);
+         $marca = Marca:: create($request->all());
+ 
+         return response()->json([
+           'mensaje'=>'Marca creada exitosamente',
+           'marca'=>$marca,
+         ], 201);
     }
 
     /**
@@ -27,7 +37,17 @@ class MarcaController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $marca =  Marca::find($id);
+
+        if(!$marca){
+
+            return response()->json([
+                    'mensaje'=>'Marca no encontrada'
+            ], 404
+            ); 
+        }
+
+        return response()->json($marca, 200);
     }
 
     /**
@@ -35,7 +55,28 @@ class MarcaController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'nombres'=>'required',
+           
+        ]);
+
+         $marca =  Marca::find($id);
+
+        if(!$marca){
+
+            return response()->json([
+                    'mensaje'=>'Marca no encontrada'
+            ], 404
+            ); 
+        }
+      
+
+        $marca->update($request->all());
+        
+         return response()->json([
+            'mensaje'=>'Marca actualizada exitosamente',
+            'marca'=> $marca
+        ], 201 );
     }
 
     /**
@@ -43,6 +84,19 @@ class MarcaController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $marca =  Marca::find($id);
+         if(!$marca){
+
+            return response()->json([
+                    'mensaje'=>'Marca no encontrada'
+            ], 404
+            ); 
+        }
+
+        $marca->delete();
+
+        return response()->json([
+            'mensaje'=>'Marca eliminada exitosamente'
+        ],200);
     }
 }
