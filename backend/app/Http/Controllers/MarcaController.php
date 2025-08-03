@@ -28,7 +28,7 @@ class MarcaController extends Controller
  
          return response()->json([
            'mensaje'=>'Marca creada exitosamente',
-           'marca'=>$marca,
+           'marcas'=>$marca,
          ], 201);
     }
 
@@ -75,7 +75,7 @@ class MarcaController extends Controller
         
          return response()->json([
             'mensaje'=>'Marca actualizada exitosamente',
-            'marca'=> $marca
+            'marcas'=> $marca
         ], 201 );
     }
 

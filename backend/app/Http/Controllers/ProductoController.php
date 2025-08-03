@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Producto;
 
 class ProductoController extends Controller
 {
@@ -11,7 +12,7 @@ class ProductoController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json(Producto::all());
     }
 
     /**
@@ -19,7 +20,20 @@ class ProductoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+     
+        $request-> validate([
+            'nombres'=>'required',
+            'precio'=>'required',
+            'marca_id'=>'required',
+            
+            
+         ]);
+         $producto = Producto:: create($request->all());
+ 
+         return response()->json([
+           'mensaje'=>'producto creado exitosamente',
+           'productos'=>$producto,
+         ], 201);
     }
 
     /**
@@ -27,7 +41,17 @@ class ProductoController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $producto =  Producto::find($id);
+
+        if(!$producto){
+
+            return response()->json([
+                    'mensaje'=>'Producto no encontrada'
+            ], 404
+            ); 
+        }
+
+        return response()->json($producto, 200);
     }
 
     /**
@@ -35,7 +59,30 @@ class ProductoController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request-> validate([
+            'nombres'=>'required',
+            'precio'=>'required',
+            'marca_id'=>'required',
+            
+            
+         ]);
+         $producto =  Producto::find($id);
+
+        if(!$producto){
+
+            return response()->json([
+                    'mensaje'=>'Producto no encontrada'
+            ], 404
+            ); 
+        }
+      
+
+        $producto->update($request->all());
+        
+         return response()->json([
+            'mensaje'=>'Producto actualizada exitosamente',
+            'productos'=> $producto
+        ], 201 );
     }
 
     /**
@@ -43,6 +90,19 @@ class ProductoController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $producto =  Producto::find($id);
+         if(!$producto){
+
+            return response()->json([
+                    'mensaje'=>'Producto no encontrada'
+            ], 404
+            ); 
+        }
+
+        $producto->delete();
+
+        return response()->json([
+            'mensaje'=>'Producto eliminado exitosamente'
+        ],200);
     }
 }
